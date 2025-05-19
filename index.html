@@ -174,41 +174,41 @@
     ];
 
     function carregarPresentes() {
-      const container = document.getElementById("giftList");
-      const refPresentes = ref(db, "presentes");
+  const container = document.getElementById("giftList");
+  const refPresentes = ref(db, "presentes");
 
-      onValue(refPresentes, (snapshot) => {
-        const dados = snapshot.val() || {};
-        container.innerHTML = "";
+  onValue(refPresentes, (snapshot) => {
+    const dados = snapshot.val() || {};
+    container.innerHTML = "";
 
-        presentes.forEach((presente, index) => {
-          const reservado = dados[presente];
+    presentes.forEach((presente, index) => {
+      const reservado = dados[presente];
 
-          const div = document.createElement("div");
-          div.className = "gift";
+      // Se o presente já foi reservado, não renderiza
+      if (reservado) return;
 
-          if (reservado) {
-            div.innerHTML = `<strong>${presente}</strong><br/><em>Reservado por: ${reservado.nome} (${reservado.entrega})</em>`;
-          } else {
-            div.innerHTML = `
-              <strong>${presente}</strong>
-              <label>Nome:
-                <input id="nome-${index}" name="nome" maxlength="30" />
-              </label>
-              <label>Entrega:
-                <select id="entrega-${index}">
-                  <option value="Pix">Pix</option>
-                  <option value="Evento">Entregar Pessoalmente</option>
-                </select>
-              </label>
-              <button onclick="reservarPresente(${index})">Reservar</button>
-            `;
-          }
+      const div = document.createElement("div");
+      div.className = "gift";
 
-          container.appendChild(div);
-        });
-      });
-    }
+      div.innerHTML = `
+        <strong>${presente}</strong>
+        <label>Nome:
+          <input id="nome-${index}" name="nome" maxlength="30" />
+        </label>
+        <label>Entrega:
+          <select id="entrega-${index}">
+            <option value="Pix">Pix</option>
+            <option value="Evento">Entregar Pessoalmente</option>
+          </select>
+        </label>
+        <button onclick="reservarPresente(${index})">Reservar</button>
+      `;
+
+      container.appendChild(div);
+    });
+  });
+}
+
 
     window.reservarPresente = function(index) {
       const nome = document.getElementById(`nome-${index}`).value.trim();
