@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chá de Panela - Lista de Presentes</title>
+  <style>
+    body { font-family: sans-serif; background: #f0f8ff; padding: 20px; color: #333; }
+    h1, h2 { color: #004080; }
+    .gift {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 1fr 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+    .gift strong { grid-column: 1 / 2; }
+    .gift label {
+      font-size: 0.9em;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    input[name="nome"] {
+      padding: 4px 6px;
+      font-size: 0.9em;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    select {
+      padding: 4px 6px;
+      font-size: 0.9em;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background: #004080;
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+    button:hover {
+      background: #0066cc;
+    }
+    @media (max-width: 600px) {
+      .gift {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .gift strong {
+        grid-column: auto;
+        margin-bottom: 4px;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista de Presentes - Chá de Panela Matheus e Beatriz</h1>
+
+  <div>
+    <h2>Escolha seu presente</h2>
+    <div id="giftList">Carregando lista...</div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxVxEa2ZxXQBwHBsy5Dgx2pbKqqIZtIvs",
+      authDomain: "cha-de-panela-matriz-12.firebaseapp.com",
+      databaseURL: "https://cha-de-panela-matriz-12-default-rtdb.firebaseio.com",
+      projectId: "cha-de-panela-matriz-12",
+      storageBucket: "cha-de-panela-matriz-12.firebasestorage.app",
+      messagingSenderId: "633110249607",
+      appId: "1:633110249607:web:245ca68d131a403528b822",
+      measurementId: "G-TGT6Q571H8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const presentes = [
+      "Balde retrátil + Prendedor de roupa",
+      "Kit de Cabides Preto",
+      "Escova de Sanitário",
+      "Jogo de toalhas de banho + Rosto",
+      "Jogo de toalhas de banho + Rosto",
+      "Jogo de toalhas de banho + Rosto",
+      "Jogo de toalhas de banho + Rosto",
+      "Lixeira INOX 3L",
+      "Mop Spray",
+      "Tapete para banheiro",
+      "Vassoura + Rodo",
+      "Panos de Chão + Pá de lixo",
+      "Kit de banheiro vidro ou inox",
+      "Abridor de latas + Pegador de salada",
+      "Assadeira de vidro com tampa",
+      "Aparelho de Jantar",
+      "Bandeja de café da manhã",
+      "Boleira",
+      "Bule",
+      "Canecas de cerâmicas",
+      "Colher de pau + Amolador de facas",
+      "Concha + Escumadeira",
+      "Conjunto de facas para queijo",
+      "Cuscuzeira",
+      "Escorredor de arroz",
+      "Forma para bolo redondo",
+      "Forma para pudim",
+      "Frigideira antiaderente",
+      "Garrafa térmica de café",
+      "Jarra para Suco de vidro",
+      "Jogo de assadeiras Marinex Opaline",
+      "Jogo de copos vidro",
+      "Jogo de facas",
+      "Jogo de panelas inox 3 peças",
+      "Jogo de panelas inox 2 peças",
+      "Jogo de pratos fundos",
+      "Jogo de pratos rasos",
+      "Jogo de sobremesas",
+      "Jogo de tábuas de vidro",
+      "Jogo de taças de sobremesa",
+      "Jogo de taças de vidro",
+      "Jogo de travessas de vidro",
+      "Jogo de xícaras com pires",
+      "Kit de utensílios de silicone",
+      "Kit tigelas Bowl porcelana",
+      "Leiteira",
+      "Luva para forno",
+      "Mixer vertical",
+      "Paliteiro + saleiro de vidro",
+      "Panela de Pressão",
+      "Panela Wok Antiaderente com tampa",
+      "Pano de prato + descascador de legumes",
+      "Panquequeira Antiaderente",
+      "Pegador de massas + Peneira",
+      "Pegador de salada + Copo medidor",
+      "Petisqueira redonda",
+      "Porta azeite + vinagre de vidro",
+      "Porta Frios Herméticos",
+      "Porta temperos de vidro",
+      "Potes herméticos",
+      "Queijeira + manteigueira francesa",
+      "Ralador inox + colher de sorvete inox",
+      "Saladeira",
+      "Talheres em aço inox",
+      "Tabuleiro redondo inox",
+      "Tabuleiro quadrado inox",
+      "Taças de vidro",
+      "Funil + Esteira de jogo de mesa",
+      "Rodo de pia",
+      "Pano de Prato",
+      "Saca rolha - Tramontina",
+      "Espremedor de alho",
+      "Coador para filtro de papel",
+      "Rolo de pastel",
+      "Fruteira de Vidro",
+      "Kit de Descanso de panela",
+      "Tesoura para cozinha",
+      "Jogo de Potes",
+      "Pano de Prato"
+    ];
+
+    function carregarPresentes() {
+      const container = document.getElementById("giftList");
+      const refPresentes = ref(db, "presentes");
+
+      onValue(refPresentes, (snapshot) => {
+        const dados = snapshot.val() || {};
+        container.innerHTML = "";
+
+        presentes.forEach((presente, index) => {
+          const reservado = dados[presente];
+
+          const div = document.createElement("div");
+          div.className = "gift";
+
+          if (reservado) {
+            div.innerHTML = `<strong>${presente}</strong><br/><em>Reservado por: ${reservado.nome} (${reservado.entrega})</em>`;
+          } else {
+            div.innerHTML = `
+              <strong>${presente}</strong>
+              <label>Nome:
+                <input id="nome-${index}" name="nome" maxlength="30" />
+              </label>
+              <label>Entrega:
+                <select id="entrega-${index}">
+                  <option value="Pix">Pix</option>
+                  <option value="Evento">Levar no Evento</option>
+                </select>
+              </label>
+              <button onclick="reservarPresente(${index})">Reservar</button>
+            `;
+          }
+
+          container.appendChild(div);
+        });
+      });
+    }
+
+    window.reservarPresente = function(index) {
+      const nome = document.getElementById(`nome-${index}`).value.trim();
+      const entrega = document.getElementById(`entrega-${index}`).value;
+      const presente = presentes[index];
+
+      if (!nome) {
+        alert("Digite seu nome antes de reservar.");
+        return;
+      }
+
+      const refPresente = ref(db, `presentes/${presente}`);
+      set(refPresente, { nome, entrega }).then(() => {
+        alert("Presente reservado com sucesso! Muito obrigado por contribuir com essa fase tão especial de nossas vidas!");
+
+        fetch("https://script.google.com/macros/s/AKfycbyLbHV_X75EiYTE9EhSxAusJn7A8jxsJVOdp4S1c3ugECV0_Etz2fie10giYhk1tDSz/exec", {
+          method: "POST",
+          body: JSON.stringify({ nome, entrega, presente }),
+          headers: { "Content-Type": "application/json" }
+        }).catch(error => {
+          console.error("Erro ao enviar para Google Sheets:", error);
+        });
+      });
+    };
+
+    carregarPresentes();
+  </script>
+</body>
+</html>
