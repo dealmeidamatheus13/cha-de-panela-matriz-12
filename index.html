@@ -105,6 +105,7 @@
       "Kit de banheiro vidro ou inox",
       "Abridor de latas + Pegador de salada",
       "Assadeira de vidro com tampa",
+      "Assadeira de vidro com tampa",
       "Aparelho de Jantar",
       "Bandeja de café da manhã",
       "Boleira",
@@ -166,6 +167,8 @@
       "Fruteira de Vidro",
       "Kit de Descanso de panela",
       "Tesoura para cozinha",
+      "Tesoura para cozinha",
+      "Pano de Prato de Vaquinha",
       "Jogo de Potes",
       "Pano de Prato"
     ];
@@ -219,16 +222,20 @@
 
       const refPresente = ref(db, `presentes/${presente}`);
       set(refPresente, { nome, entrega }).then(() => {
-        alert("Presente reservado com sucesso! Muito obrigado por contribuir com essa fase tão especial de nossas vidas!");
+  alert("Presente reservado com sucesso! Muito obrigado por contribuir com essa fase tão especial de nossas vidas!");
 
-        fetch("https://script.google.com/macros/s/AKfycbyLbHV_X75EiYTE9EhSxAusJn7A8jxsJVOdp4S1c3ugECV0_Etz2fie10giYhk1tDSz/exec", {
-          method: "POST",
-          body: JSON.stringify({ nome, entrega, presente }),
-          headers: { "Content-Type": "application/json" }
-        }).catch(error => {
-          console.error("Erro ao enviar para Google Sheets:", error);
-        });
-      });
+  // Atualiza a lista imediatamente, sem esperar o Firebase detectar mudança
+  carregarPresentes();
+
+  fetch("https://script.google.com/macros/s/AKfycbyLbHV_X75EiYTE9EhSxAusJn7A8jxsJVOdp4S1c3ugECV0_Etz2fie10giYhk1tDSz/exec", {
+    method: "POST",
+    body: JSON.stringify({ nome, entrega, presente }),
+    headers: { "Content-Type": "application/json" }
+  }).catch(error => {
+    console.error("Erro ao enviar para Google Sheets:", error);
+  });
+});
+
     };
 
     carregarPresentes();
