@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -24,7 +25,13 @@
       flex-direction: column;
       gap: 2px;
     }
-    input[name="nome"], select {
+    input[name="nome"] {
+      padding: 4px 6px;
+      font-size: 0.9em;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    select {
       padding: 4px 6px;
       font-size: 0.9em;
       width: 100%;
@@ -55,26 +62,10 @@
         width: 100%;
       }
     }
-    #controls {
-      margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    #controls input, #controls button {
-      padding: 8px;
-      font-size: 0.9em;
-    }
   </style>
 </head>
 <body>
   <h1>Lista de Presentes - Chá de Panela Matheus e Beatriz</h1>
-  <p>Escolha um presente, preencha seu nome, selecione a forma de entrega e clique em Reservar.</p>
-
-  <div id="controls">
-    <input type="text" id="busca" placeholder="Buscar presente..." />
-    <button id="toggleDisponiveis">Mostrar apenas disponíveis</button>
-  </div>
 
   <div>
     <h2>Escolha seu presente</h2>
@@ -90,7 +81,7 @@
       authDomain: "cha-de-panela-matriz-12.firebaseapp.com",
       databaseURL: "https://cha-de-panela-matriz-12-default-rtdb.firebaseio.com",
       projectId: "cha-de-panela-matriz-12",
-      storageBucket: "cha-de-panela-matriz-12.appspot.com",
+      storageBucket: "cha-de-panela-matriz-12.firebasestorage.app",
       messagingSenderId: "633110249607",
       appId: "1:633110249607:web:245ca68d131a403528b822",
       measurementId: "G-TGT6Q571H8"
@@ -99,11 +90,111 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const presentes = [...`(inserir sua lista aqui)`].sort();
+    const presentes = [
+      "Balde retrátil + Prendedor de roupa",
+      "Kit de Cabides Preto",
+	  "Cortina comprida branca 2,80 X 2,80",
+	  "Cortina comprida cinza 2,80 X 2,80",
+	  "Edredom de casal bege",
+      "Edredom de casal cinza",
+	  "Fronhas de algodão bege",
+	  "Fronhas de algodão cinza",
+	  "Jogo do de lençol casal em algodão",
+	  "Jogo do de lençol casal em algodão",
+	  "Manta de microfibra casal",
+	  "Manta para sofá em algodão",
+	  "Toalha de mesa de 6 lugares I", 
+	  "Toalha de mesa de 6 lugares II", 
+	  "Toalha de mesa de 6 lugares III", 
+	  "Jogo de travesseiro",
+	  "Balde",
+	  "Cesto de roupa branco", 
+	  "Bandeja",
+ 	  "Faqueiro",
+      "Escova de Sanitário",
+      "Jogo de toalhas de banho + Rosto I",
+      "Jogo de toalhas de banho + Rosto II",
+      "Jogo de toalhas de banho + Rosto III",
+      "Jogo de toalhas de banho + Rosto IV",
+      "Lixeira INOX 3L",
+      "Mop Spray",
+      "Tapete para banheiro",
+      "Vassoura + Rodo",
+      "Panos de Chão + Pá de lixo",
+      "Kit de banheiro vidro ou inox",
+      "Abridor de latas + Pegador de salada",
+      "Assadeira de vidro com tampa I",
+      "Assadeira de vidro com tampa II",
+      "Aparelho de Jantar",
+      "Bandeja de café da manhã",
+      "Boleira",
+      "Bule",
+      "Canecas de cerâmicas",
+      "Colher de pau + Amolador de facas",
+      "Concha + Escumadeira",
+      "Conjunto de facas para queijo",
+      "Cuscuzeira",
+      "Escorredor de arroz",
+      "Forma para bolo redondo",
+      "Forma para pudim",
+      "Frigideira antiaderente",
+      "Garrafa térmica de café",
+      "Jarra para Suco de vidro",
+      "Jogo de assadeiras Marinex Opaline",
+      "Jogo de copos vidro",
+      "Jogo de facas",
+      "Jogo de panelas inox 3 peças",
+      "Jogo de panelas inox 2 peças",
+      "Jogo de pratos fundos",
+      "Jogo de pratos rasos",
+      "Jogo de sobremesas",
+      "Jogo de tábuas de vidro",
+      "Jogo de taças de sobremesa",
+      "Jogo de taças de vidro",
+      "Jogo de travessas de vidro",
+      "Jogo de xícaras com pires",
+      "Kit de utensílios de silicone",
+      "Kit tigelas Bowl porcelana",
+      "Leiteira",
+      "Luva para forno",
+      "Mixer vertical",
+      "Paliteiro + saleiro de vidro",
+      "Panela de Pressão",
+      "Panela Wok Antiaderente com tampa",
+      "Pano de prato + descascador de legumes",
+      "Panquequeira Antiaderente",
+      "Pegador de massas + Peneira",
+      "Pegador de salada + Copo medidor",
+      "Petisqueira redonda",
+      "Porta azeite + vinagre de vidro",
+      "Porta Frios Herméticos",
+      "Porta temperos de vidro",
+      "Potes herméticos",
+      "Queijeira + manteigueira francesa",
+      "Ralador inox + colher de sorvete inox",
+      "Saladeira",
+      "Talheres em aço inox",
+      "Tabuleiro redondo inox",
+      "Tabuleiro quadrado inox",
+      "Taças de vidro",
+      "Funil + Esteira de jogo de mesa",
+      "Rodo de pia",
+      "Saca rolha - Tramontina",
+      "Espremedor de alho",
+      "Coador para filtro de papel",
+      "Rolo de pastel",
+      "Fruteira de Vidro",
+      "Kit de Descanso de panela",
+      "Tesoura para cozinha",
+      "Jogo de Potes",
+	  "Pipoqueira",
+	  "Varal Mágico 1 Metro",
+	  "Jogo de Pano de Chão",
+	  "Garrafa de Água de Vidro",
+      "Pano de Prato"
+    ];
 
-    let mostrarApenasDisponiveis = false;
-
-    function carregarPresentes(filtro = "") {
+    function carregarPresentes() {
       const container = document.getElementById("giftList");
       const refPresentes = ref(db, "presentes");
 
@@ -113,10 +204,6 @@
 
         presentes.forEach((presente, index) => {
           const reservado = dados[presente];
-          const textoLower = presente.toLowerCase();
-
-          if (filtro && !textoLower.includes(filtro.toLowerCase())) return;
-          if (mostrarApenasDisponiveis && reservado) return;
 
           const div = document.createElement("div");
           div.className = "gift";
@@ -144,15 +231,6 @@
       });
     }
 
-    document.getElementById("busca").addEventListener("input", (e) => {
-      carregarPresentes(e.target.value);
-    });
-
-    document.getElementById("toggleDisponiveis").addEventListener("click", () => {
-      mostrarApenasDisponiveis = !mostrarApenasDisponiveis;
-      carregarPresentes(document.getElementById("busca").value);
-    });
-
     window.reservarPresente = function(index) {
       const nome = document.getElementById(`nome-${index}`).value.trim();
       const entrega = document.getElementById(`entrega-${index}`).value;
@@ -179,5 +257,7 @@
 
     carregarPresentes();
   </script>
+
 </body>
 </html>
+
